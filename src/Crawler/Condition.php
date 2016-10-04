@@ -5,7 +5,14 @@ namespace StockCrawler;
 class Condition
 {
 
-    public static function parse($condition)
+    protected $factory;
+
+    public function __construct()
+    {
+        $this->factory = Factory::create();
+    }
+
+    public function parse($condition)
     {
         var_dump($condition);
 
@@ -13,24 +20,23 @@ class Condition
 
 
 
-        $parts = explode(' ', $condition);
+        $parts = $this->explode($condition);
 
-
-        //todo smart explode of $condition
-        dd($parts);
-        
         foreach ($parts as $part)
         {
 
 
-            switch (static::type($part)) {
+            switch ($this->type($part)) {
                 case "function":
                     echo "function<br>";
 
 
-                    $function = static::getFunctionName($part);
+                    $function = $this->getFunctionName($part);
 
-                    $attitudes = static::getFunctionAttitudes($part);
+                    $attitudes = $this->getFunctionAttitudes($part);
+
+
+                    $this->factory->price();
 
                     break;
                 case "operator":
@@ -50,50 +56,63 @@ class Condition
         return $condition;
     }
 
-    public static function getFunctionName($part)
+    public function price(){
+
+        dd('sdsfd');
+    }
+
+    public function explode($condition)
+    {
+        $pattern = '#[a-z]+\({1}.*\){1}#U';
+
+        // find all functions and replace spaces
+        $condition = preg_replace_callback($pattern, function($match){
+            return str_replace(' ', '', $match[0]);
+        },  $condition);
+
+        return explode(' ', $condition);
+    }
+
+    public function getFunctionName($part)
     {
         $pattern = '#[a-z]+#';
 
         preg_match($pattern, $part, $match);
 
-        return $match;
+        return $match[0];
     }
 
-    public static function getFunctionAttitudes($part)
+    public function getFunctionAttitudes($part)
     {
         $pattern = '#\({1}.*\){1}$#';
 
         preg_match($pattern, $part, $match);
 
-        dd($match);
-
         $replaces = ['(', ')'];
 
         $attitudes = str_replace($replaces, '', $match);
 
-        dd($attitudes);
-
-        return $attitudes;
+        return explode(',', $attitudes[0]);
     }
 
-    public static function type($part)
+    public function type($part)
     {
-        if(static::isFunction($part)){
+        if($this->isFunction($part)){
             return 'function';
         }
 
-        if(static::isOperator($part)){
+        if($this->isOperator($part)){
             return 'operator';
         }
 
-        if(static::isValue($part)){
+        if($this->isValue($part)){
             return 'value';
         }
 
         return null;
     }
 
-    public static function isOperator($part)
+    public function isOperator($part)
     {
         $operators = ['<=', '=', '<='];
 
@@ -108,14 +127,14 @@ class Condition
         return false;
     }
 
-    public static function isFunction($part)
+    public function isFunction($part)
     {
         $pattern = '#[a-z]+\({1}.*\){1}$#';
 
         return (preg_match($pattern, $part)) ? true : false;
     }
 
-    public static function isValue($part)
+    public function isValue($part)
     {
         return is_numeric($part);
     }

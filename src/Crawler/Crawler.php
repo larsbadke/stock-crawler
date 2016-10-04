@@ -34,7 +34,7 @@ class Crawler
             {
                 foreach ($this->conditions->get() as $condition)
                 {
-                    $condition = Condition::parse($condition);
+                    $condition = (new Condition())->parse($condition);
 
                     var_dump($condition);
                     echo '<br>';
