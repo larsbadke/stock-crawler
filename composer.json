@@ -1,0 +1,27 @@
+{
+    "name": "larsbadke/stock-crawler",
+    "description": "Stock-Crawler is a PHP library that helps you to find your stocks",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lars Badke",
+            "email": "l.badke@gmx.net"
+        }
+    ],
+    "require": {
+        "php": "^5.3.3|^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "StockCrawler\\": "src/Crawler/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StockCrawler\\Test\\": "test/Crawler/"
+        }
+    }
+}
