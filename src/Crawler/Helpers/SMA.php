@@ -1,9 +1,6 @@
 <?php
 
-
 namespace StockCrawler\Helpers;
-
-
 
 use Illuminate\Support\Collection;
 
@@ -18,6 +15,4 @@ class SMA
 
         return round($quotes->take($period)->avg('close'), $round);
     }
-
-
 }

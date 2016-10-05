@@ -33,5 +33,9 @@ class Conditions
     {
         return $this->conditions;
     }
-    
+
+    public function count()
+    {
+        return count($this->conditions);
+    }
 }

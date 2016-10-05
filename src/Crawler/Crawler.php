@@ -39,6 +39,8 @@ class Crawler
 
             foreach ($quotes as $index => $quote)
             {
+                $counter = 0;
+                
                 foreach ($this->conditions->get() as $condition)
                 {
                     $compiler = new Compiler($stock, $quote);
@@ -49,8 +51,13 @@ class Crawler
 
                     if($compiler->isTrue($compiled)){
 
-                        array_push($results, $quote);
+                        $counter++;
                     }
+                }
+                
+                if($counter == $this->conditions->count()){
+                    
+                    array_push($results, $quote);
                 }
             }
         }

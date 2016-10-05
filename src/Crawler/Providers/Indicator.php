@@ -3,6 +3,7 @@
 namespace StockCrawler\Providers;
 
 use StockCrawler\Helpers\SMA;
+use StockCrawler\Helpers\RSI;
 
 class Indicator extends Provider
 {
@@ -16,11 +17,9 @@ class Indicator extends Provider
 
     public function rsi($period)
     {
-        $quotes = $this->stock->last($this->quote->datetime, $period);
+        $quotes = $this->stock->last($this->quote->datetime, $period + 1);
         
-        //TODO add rsi
-        
-        return 'rsi-'.$period;
+        return RSI::calculate($quotes, $period, 2);
     }
 
 }
