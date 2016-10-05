@@ -6,9 +6,9 @@ class Factory
 {
     protected static $defaultProviders = array('Base', 'Indicator');
     
-    public static function create($quote)
+    public static function create($stock, $quote)
     {
-        $generator = new Generator($quote);
+        $generator = new Generator($stock, $quote);
         
         foreach (static::$defaultProviders as $provider) {
             

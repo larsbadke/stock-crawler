@@ -8,8 +8,12 @@ class Generator {
 
     protected $quote;
 
-    public function __construct($quote)
+    protected $stock;
+
+    public function __construct($stock, $quote)
     {
+        $this->stock = $stock;
+        
         $this->quote = $quote;
     }
 
@@ -24,7 +28,7 @@ class Generator {
             
             if(property_exists($provider, $property)){
 
-                $class = new $provider($this->quote);
+                $class = new $provider($this->stock, $this->quote);
                 
                 return $class->$property;
             }
@@ -39,7 +43,7 @@ class Generator {
 
             if(method_exists($provider, $method)){
 
-                $class = new $provider($this->quote);
+                $class = new $provider($this->stock, $this->quote);
 
                 return call_user_func_array(array($class, $method), $arguments[0]);
             }

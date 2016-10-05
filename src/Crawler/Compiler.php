@@ -5,10 +5,18 @@ namespace StockCrawler;
 class Compiler
 {
 
+    private $stock;
 
-    public function parse($condition, $quote)
+    public function __construct($stock, $quote)
     {
-        $factory = Factory::create($quote);
+        $this->stock = $stock;
+
+        $this->factory = Factory::create($stock, $quote);
+    }
+
+    public function parse($condition)
+    {
+  
         
         $string = '';
 
@@ -23,7 +31,7 @@ class Compiler
 
                     $attitudes = $this->getFunctionAttitudes($part);
                     
-                    $string .= $factory->$function($attitudes).' ';
+                    $string .= $this->factory->$function($attitudes).' ';
 
                     break;
                 case "operator":
@@ -40,6 +48,19 @@ class Compiler
         }
         
         return $string;
+    }
+
+    public function isTrue($complied)
+    {
+        $condition = 'return '.$complied.';';
+
+        //todo check for security issues
+        if(eval($condition)){
+
+            return true;
+        }
+
+        return false;
     }
 
     public function explode($condition)

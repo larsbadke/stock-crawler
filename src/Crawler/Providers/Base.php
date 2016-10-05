@@ -5,11 +5,6 @@ namespace StockCrawler\Providers;
 
 class Base extends Provider
 {
-    public function __construct($quote)
-    {
-        parent::__construct($quote);
-    }
-
     public function price()
     {
         return $this->quote->close;

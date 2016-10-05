@@ -12,9 +12,13 @@ class Provider{
     
     protected $quote;
 
+    protected $stock;
 
-    public function __construct($quote)
+
+    public function __construct($stock, $quote)
     {
+        $this->stock = $stock;
+        
         $this->quote = $quote;
     }
 

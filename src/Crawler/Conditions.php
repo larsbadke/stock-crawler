@@ -17,7 +17,6 @@ class Conditions
         $this->clean();
 
         $this->create();
-
     }
 
     public function clean()
@@ -35,19 +34,4 @@ class Conditions
         return $this->conditions;
     }
     
-//    public function next()
-//    {
-//        if(!array_key_exists($this->index, $this->conditions)){
-//
-//            return null;
-//        }
-//
-//        $condition = $this->conditions[$this->index];
-//
-//        $this->index++;
-//
-//        return (new Condition())->parse($condition);
-
-//    }
-
 }

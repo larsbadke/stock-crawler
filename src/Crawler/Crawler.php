@@ -3,10 +3,10 @@
 namespace StockCrawler;
 
 use Carbon\Carbon;
+use DateTime;
 
 class Crawler
 {
-
     protected $conditions;
 
     protected $stocks;
@@ -23,7 +23,48 @@ class Crawler
         //todo create new stocks class
         $this->stocks = $stocks;
 
-        $this->compiler = new Compiler();
+        $this->from('01.01.1970');
+
+        $this->to((new DateTime('now'))->format('d.m.Y'));
+    }
+
+    public function run()
+    {
+        $results = [];
+
+        foreach ($this->stocks as $stock)
+        {
+            $stock = new Stock($stock);
+            
+            $quotes = $this->fetchQuotes($stock->quotes());
+
+            foreach ($quotes as $index => $quote)
+            {
+                foreach ($this->conditions->get() as $condition)
+                {
+                    $compiler = new Compiler($stock, $quote);
+                    
+                    $compiled = $compiler->parse($condition);
+
+                    if($compiler->isTrue($compiled)){
+
+                        array_push($results, $quote);
+                    }
+
+                    echo $compiled.'<br>';
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    protected function fetchQuotes($quotes)
+    {
+        return $quotes->filter(function ($value, $key) {
+
+            return ($value->datetime >= $this->from) && ($value->datetime <= $this->to);
+        });
     }
 
     public function results()
@@ -43,41 +84,6 @@ class Crawler
         $this->to = Carbon::parse($date);
 
         return $this;
-    }
-
-    protected function fetchQuotes($quotes)
-    {
-        return $quotes->filter(function ($value, $key) {
-
-            return ($value->datetime >= $this->from) && ($value->datetime <= $this->to);
-        });
-    }
-
-    public function run()
-    {
-        $results = [];
-
-        foreach ($this->stocks as $stock)
-        {
-            $quotes = $this->fetchQuotes($stock->data);
-
-            foreach ($quotes as $index => $quote)
-            {
-                foreach ($this->conditions->get() as $condition)
-                {
-                    $compiled = $this->compiler->parse($condition, $quote);
-                    
-                    if($this->compiler->isTrue($compiled)){
-                        
-                        array_push($results, $quote);
-                    }
-
-                    echo $compiled.'<br>';
-                }
-            }
-        }
-        
-        return $results;
     }
 
 
