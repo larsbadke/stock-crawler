@@ -1,7 +1,6 @@
 <?php
 namespace StockCrawler\Providers;
 
-use StockCrawler\Factory;
 
 class Provider{
     /**
@@ -10,16 +9,13 @@ class Provider{
      * @var int
      */
     public $round = 2;
-    /**
-     * Faker instance
-     *
-     * @var \Faker\Generator
-     */
-    protected $faker;
+    
+    protected $quote;
 
-    public function __construct()
+
+    public function __construct($quote)
     {
-        $this->faker = Factory::create();
+        $this->quote = $quote;
     }
 
     /**

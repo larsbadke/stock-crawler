@@ -2,29 +2,41 @@
 
 namespace StockCrawler\Providers;
 
-use StockCrawler\Generator;
 
-class Base extends Provider{
-    
-   
-
-    /**
-     * @var Generator
-     */
-    private $generator;
-
-    public function __construct(Generator $generator)
+class Base extends Provider
+{
+    public function __construct($quote)
     {
-        parent::__construct();
-        
-        $this->generator = $generator;
+        parent::__construct($quote);
     }
 
-    public static function price()
+    public function price()
     {
-        dd('sdsdf');
+        return $this->quote->close;
     }
- 
-    
 
+    public function close()
+    {
+        return $this->quote->close;
+    }
+
+    public function open()
+    {
+        return $this->quote->open;
+    }
+
+    public function low()
+    {
+        return $this->quote->low;
+    }
+
+    public function high()
+    {
+        return $this->quote->high;
+    }
+
+    public function volume()
+    {
+        return $this->quote->volume;
+    }
 }

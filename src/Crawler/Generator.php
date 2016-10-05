@@ -5,7 +5,14 @@ namespace StockCrawler;
 class Generator {
     
     protected $providers = array();
-    
+
+    protected $quote;
+
+    public function __construct($quote)
+    {
+        $this->quote = $quote;
+    }
+
     public function addProvider($provider)
     {
         array_unshift($this->providers, $provider);
@@ -16,21 +23,25 @@ class Generator {
         foreach ($this->providers as $provider){
             
             if(property_exists($provider, $property)){
+
+                $class = new $provider($this->quote);
                 
-                return $provider->$property();
+                return $class->$property;
             }
         }
         
         throw new \InvalidArgumentException(sprintf('Unable to find property "%s"', $property));
     }
     
-    public function __call($method, $arguments)
+    public function __call($method, $arguments = [])
     {
         foreach ($this->providers as $provider){
-            
+
             if(method_exists($provider, $method)){
 
-                return call_user_func_array(array($provider, $method), $arguments);
+                $class = new $provider($this->quote);
+
+                return call_user_func_array(array($class, $method), $arguments[0]);
             }
         }
         

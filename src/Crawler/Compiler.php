@@ -2,63 +2,44 @@
 
 namespace StockCrawler;
 
-class Condition
+class Compiler
 {
 
-    protected $factory;
 
-    public function __construct()
+    public function parse($condition, $quote)
     {
-        $this->factory = Factory::create();
-    }
-
-    public function parse($condition)
-    {
-        var_dump($condition);
-
-        $array = [];
-
-
+        $factory = Factory::create($quote);
+        
+        $string = '';
 
         $parts = $this->explode($condition);
 
         foreach ($parts as $part)
         {
-
-
             switch ($this->type($part)) {
                 case "function":
-                    echo "function<br>";
-
 
                     $function = $this->getFunctionName($part);
 
                     $attitudes = $this->getFunctionAttitudes($part);
-
-
-                    $this->factory->price();
+                    
+                    $string .= $factory->$function($attitudes).' ';
 
                     break;
                 case "operator":
-                    echo "operator<br>";
+                    
+                    $string .= $part.' ';
+                    
                     break;
                 case "value":
-                    echo "value<br>";
+                    
+                    $string .= $part.' ';
+                    
                     break;
             }
-
         }
-
-        dd($parts);
-
-
-
-        return $condition;
-    }
-
-    public function price(){
-
-        dd('sdsfd');
+        
+        return $string;
     }
 
     public function explode($condition)
@@ -91,7 +72,7 @@ class Condition
         $replaces = ['(', ')'];
 
         $attitudes = str_replace($replaces, '', $match);
-
+        
         return explode(',', $attitudes[0]);
     }
 

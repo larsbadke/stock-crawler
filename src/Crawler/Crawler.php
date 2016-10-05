@@ -2,26 +2,55 @@
 
 namespace StockCrawler;
 
+use Carbon\Carbon;
+
 class Crawler
 {
 
-    private $conditions;
+    protected $conditions;
 
-    private $stocks;
+    protected $stocks;
 
     protected $results;
 
-    public function __construct(Conditions $conditions, $stocks)
-    {
-        $this->conditions = $conditions;
+    protected $from;
 
+    protected $to;
+
+    public function __construct($stocks, $conditions)
+    {
+        $this->conditions = new Conditions($conditions);
+        //todo create new stocks class
         $this->stocks = $stocks;
 
+        $this->compiler = new Compiler();
     }
 
     public function results()
     {
         return $this->results = $this->run();
+    }
+
+    public function from($date)
+    {
+        $this->from = Carbon::parse($date);
+
+        return $this;
+    }
+
+    public function to($date)
+    {
+        $this->to = Carbon::parse($date);
+
+        return $this;
+    }
+
+    protected function fetchQuotes($quotes)
+    {
+        return $quotes->filter(function ($value, $key) {
+
+            return ($value->datetime >= $this->from) && ($value->datetime <= $this->to);
+        });
     }
 
     public function run()
@@ -30,25 +59,25 @@ class Crawler
 
         foreach ($this->stocks as $stock)
         {
-            foreach ($stock->data as $index => $data)
+            $quotes = $this->fetchQuotes($stock->data);
+
+            foreach ($quotes as $index => $quote)
             {
                 foreach ($this->conditions->get() as $condition)
                 {
-                    $condition = (new Condition())->parse($condition);
+                    $compiled = $this->compiler->parse($condition, $quote);
+                    
+                    if($this->compiler->isTrue($compiled)){
+                        
+                        array_push($results, $quote);
+                    }
 
-                    var_dump($condition);
-                    echo '<br>';
+                    echo $compiled.'<br>';
                 }
-
             }
-
-
         }
-
-
-
-
-        return [];
+        
+        return $results;
     }
 
 

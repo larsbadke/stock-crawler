@@ -30,23 +30,24 @@ class Conditions
         $this->conditions = array_filter(explode(';', $this->conditions));
     }
 
-    public function next()
-    {
-        if(!array_key_exists($this->index, $this->conditions)){
-
-            return null;
-        }
-
-        $condition = $this->conditions[$this->index];
-
-        $this->index++;
-
-        return Condition::parse($condition);
-    }
-
     public function get()
     {
         return $this->conditions;
     }
+    
+//    public function next()
+//    {
+//        if(!array_key_exists($this->index, $this->conditions)){
+//
+//            return null;
+//        }
+//
+//        $condition = $this->conditions[$this->index];
+//
+//        $this->index++;
+//
+//        return (new Condition())->parse($condition);
+
+//    }
 
 }

@@ -19,13 +19,7 @@ composer require larsbadke/stock-crawler
 
 ## Basic Usage
 
-Use `StockCrawler\Factory::create()` to create and initialize Stock-Faker, now you can generate data by accessing properties named after the type of data you want.
-
-```php
-<?php
-
-
-```
+coming soon!
 
 ## License
 

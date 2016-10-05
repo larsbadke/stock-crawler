@@ -4,11 +4,11 @@ namespace StockCrawler;
 
 class Factory
 {
-    protected static $defaultProviders = array('Base');
+    protected static $defaultProviders = array('Base', 'Indicator');
     
-    public static function create()
+    public static function create($quote)
     {
-        $generator = new Generator();
+        $generator = new Generator($quote);
         
         foreach (static::$defaultProviders as $provider) {
             
