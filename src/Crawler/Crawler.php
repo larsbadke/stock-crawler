@@ -2,7 +2,6 @@
 
 namespace StockCrawler;
 
-use Carbon\Carbon;
 use DateTime;
 
 class Crawler
@@ -20,7 +19,7 @@ class Crawler
     public function __construct($stocks, $conditions)
     {
         $this->conditions = new Conditions($conditions);
-        //todo create new stocks class
+        
         $this->stocks = $stocks;
 
         $this->from('01.01.1970');
@@ -36,7 +35,7 @@ class Crawler
         {
             $stock = new Stock($stock);
             
-            $quotes = $this->fetchQuotes($stock->quotes());
+            $quotes = $stock->quotes($this->from, $this->to, 'asc');
 
             foreach ($quotes as $index => $quote)
             {
@@ -46,25 +45,17 @@ class Crawler
                     
                     $compiled = $compiler->parse($condition);
 
+                    echo $index.' - '.$compiled.'<br>';
+
                     if($compiler->isTrue($compiled)){
 
                         array_push($results, $quote);
                     }
-
-                    echo $compiled.'<br>';
                 }
             }
         }
 
         return $results;
-    }
-
-    protected function fetchQuotes($quotes)
-    {
-        return $quotes->filter(function ($value, $key) {
-
-            return ($value->datetime >= $this->from) && ($value->datetime <= $this->to);
-        });
     }
 
     public function results()
@@ -74,14 +65,14 @@ class Crawler
 
     public function from($date)
     {
-        $this->from = Carbon::parse($date);
+        $this->from = $date;
 
         return $this;
     }
 
     public function to($date)
     {
-        $this->to = Carbon::parse($date);
+        $this->to = $date;
 
         return $this;
     }

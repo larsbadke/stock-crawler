@@ -5,13 +5,18 @@ namespace StockCrawler\Helpers;
 
 
 
-class SMA 
-{
-    public static function calculate($data, $period = 20, $round = 2)
-    {
-//        dd($data->take($period));
+use Illuminate\Support\Collection;
 
-        return round($data->take($period)->avg('close'), $round);
+class SMA
+{
+    public static function calculate($quotes, $period = 20, $round = 2)
+    {
+        if(!$quotes instanceof Collection){
+            
+            $quotes = collect($quotes);
+        }
+
+        return round($quotes->take($period)->avg('close'), $round);
     }
 
 

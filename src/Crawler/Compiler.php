@@ -4,8 +4,7 @@ namespace StockCrawler;
 
 class Compiler
 {
-
-    private $stock;
+    protected $stock;
 
     public function __construct($stock, $quote)
     {
@@ -16,38 +15,32 @@ class Compiler
 
     public function parse($condition)
     {
-  
-        
-        $string = '';
+        $complied = [];
 
-        $parts = $this->explode($condition);
+        $terms = $this->explode($condition);
 
-        foreach ($parts as $part)
+        foreach ($terms as $index => $term)
         {
-            switch ($this->type($part)) {
+            $string = '';
+
+            switch ($this->type($term)) {
                 case "function":
-
-                    $function = $this->getFunctionName($part);
-
-                    $attitudes = $this->getFunctionAttitudes($part);
-                    
-                    $string .= $this->factory->$function($attitudes).' ';
-
+                    $function = $this->getFunctionName($term);
+                    $attitudes = $this->getFunctionAttitudes($term);
+                    $string = $this->factory->$function($attitudes);
                     break;
                 case "operator":
-                    
-                    $string .= $part.' ';
-                    
+                    $string = $term;
                     break;
                 case "value":
-                    
-                    $string .= $part.' ';
-                    
+                    $string = $term;
                     break;
             }
+
+            $complied[$index] = $string;
         }
-        
-        return $string;
+
+        return implode(' ', $complied);
     }
 
     public function isTrue($complied)
@@ -114,16 +107,13 @@ class Compiler
         return null;
     }
 
-    public function isOperator($part)
+    public function isOperator($operator)
     {
-        $operators = ['<=', '=', '<='];
+        $operators = ['<=', '=', '>=', 'and', '&&'];
 
-        foreach ($operators as $operator) {
+        if(in_array($operator, $operators)){
 
-            if(strpos($part, $operator)){
-
-                return true;
-            }
+            return true;
         }
 
         return false;
