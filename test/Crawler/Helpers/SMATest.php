@@ -54,11 +54,12 @@ class SMATest extends \PHPUnit_Framework_TestCase{
 
         $this->assertEquals(110, $sma5);
     }
-    
+
+    /**
+     * @expectedException Exception
+     */
     public function test_calculation_with_not_enough_data()
     {
-        $sma5 = SMA::calculate($this->quotes, 10, 'open', 2);
-
-        $this->assertEquals('not enough data', $sma5);
+        SMA::calculate($this->quotes, 10, 'open', 2);
     }
 }

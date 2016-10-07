@@ -19,15 +19,15 @@ class Compiler
 
         $terms = $this->explode($condition);
 
-        foreach ($terms as $index => $term)
-        {
+        foreach ($terms as $index => $term) {
             $string = '';
 
             switch ($this->type($term)) {
                 case "function":
                     $function = $this->getFunctionName($term);
                     $attitudes = $this->getFunctionAttitudes($term);
-                    $string = $this->factory->$function($attitudes);
+
+                    $string = call_user_func_array([$this->factory, $function], $attitudes);
                     break;
                 case "operator":
                     $string = $term;
@@ -43,17 +43,32 @@ class Compiler
         return implode(' ', $complied);
     }
 
-    public function isTrue($complied)
+    protected function checkErrors($condition)
     {
-        $condition = 'return '.$complied.';';
-
-        //todo check for security issues
-        if(eval($condition)){
-
-            return true;
-        }
+//        var_dump($condition);
+//
+//
+//        var_dump(strpos('error', $condition));
+//
+//        if(strpos('error', $condition)){
+//
+//        }
 
         return false;
+    }
+
+    public function isTrue($complied)
+    {
+        $result = false;
+
+        $condition = 'return ' . $complied . ';';
+
+        if(!$this->checkErrors($condition)){
+
+            $result = eval($condition);
+        }
+
+        return $result;
     }
 
     public function explode($condition)
@@ -61,9 +76,9 @@ class Compiler
         $pattern = '#[a-z]+\({1}.*\){1}#U';
 
         // find all functions and replace spaces
-        $condition = preg_replace_callback($pattern, function($match){
+        $condition = preg_replace_callback($pattern, function ($match) {
             return str_replace(' ', '', $match[0]);
-        },  $condition);
+        }, $condition);
 
         return explode(' ', $condition);
     }
@@ -86,21 +101,21 @@ class Compiler
         $replaces = ['(', ')'];
 
         $attitudes = str_replace($replaces, '', $match);
-        
+
         return explode(',', $attitudes[0]);
     }
 
     public function type($part)
     {
-        if($this->isFunction($part)){
+        if ($this->isFunction($part)) {
             return 'function';
         }
 
-        if($this->isOperator($part)){
+        if ($this->isOperator($part)) {
             return 'operator';
         }
 
-        if($this->isValue($part)){
+        if ($this->isValue($part)) {
             return 'value';
         }
 
@@ -111,7 +126,7 @@ class Compiler
     {
         $operators = ['<=', '=', '>=', 'and', '&&'];
 
-        if(in_array($operator, $operators)){
+        if (in_array($operator, $operators)) {
 
             return true;
         }

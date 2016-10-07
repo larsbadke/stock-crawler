@@ -19,6 +19,11 @@ class Provider{
     {
         $this->stock = $stock;
         
+        if(!is_object($quote)){
+
+            $quote = $this->toObject($quote);
+        }
+        
         $this->quote = $quote;
     }
 
@@ -30,5 +35,12 @@ class Provider{
     public function setRound($round)
     {
         $this->round = $round;
+    }
+
+    private function toObject($array)
+    {
+        $json = json_encode($array);
+
+        return json_decode($json);
     }
 }

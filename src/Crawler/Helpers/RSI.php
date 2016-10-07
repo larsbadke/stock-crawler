@@ -17,7 +17,7 @@ class RSI
 
         if($quotes->count() < $period + 1){
 
-            return 'not enough data';
+            throw new \Exception('Not enough data');
         }
         
         $upsAndDowns = static::calculateUpAndDowns($quotes->toArray(), $period);
@@ -25,6 +25,11 @@ class RSI
         $avgSU = collect($upsAndDowns['ups'])->avg();
 
         $avgSD = collect($upsAndDowns['downs'])->avg();
+
+        if(($avgSU+$avgSD) == 0){
+
+            throw new \Exception('Division by zero');
+        }
 
         return round(100 *($avgSU)/($avgSU+$avgSD), $round);
     }

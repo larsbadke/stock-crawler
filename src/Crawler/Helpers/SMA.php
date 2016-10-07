@@ -14,8 +14,8 @@ class SMA
         }
         
         if($quotes->count() < $period){
-            
-            return 'not enough data';
+
+            throw new \Exception('not enough Data');
         }
 
         return round($quotes->take($period)->avg($price), $round);

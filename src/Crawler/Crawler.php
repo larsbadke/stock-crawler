@@ -44,7 +44,9 @@ class Crawler
                 foreach ($this->conditions->get() as $condition)
                 {
                     $compiler = new Compiler($stock, $quote);
-                    
+
+                    dd($quote);
+
                     $compiled = $compiler->parse($condition);
 
                     //todo check complied functions values

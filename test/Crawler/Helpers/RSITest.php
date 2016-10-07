@@ -54,11 +54,12 @@ class RSITest extends \PHPUnit_Framework_TestCase{
 
         $this->assertEquals(50, $rsi4);
     }
-
+    
+    /**
+     * @expectedException Exception
+     */
     public function test_calculation_with_not_enough_data()
     {
-        $rsi4 = RSI::calculate($this->quotes, 10, 'close', 2);
-
-        $this->assertEquals('not enough data', $rsi4);
+        RSI::calculate($this->quotes, 10, 'close', 2);
     }
 }

@@ -37,7 +37,7 @@ class Generator {
         throw new \InvalidArgumentException(sprintf('Unable to find property "%s"', $property));
     }
     
-    public function __call($method, $arguments = [])
+    public function __call($method, $arguments)
     {
         foreach ($this->providers as $provider){
 
@@ -45,7 +45,7 @@ class Generator {
 
                 $class = new $provider($this->stock, $this->quote);
 
-                return call_user_func_array(array($class, $method), $arguments[0]);
+                return call_user_func_array(array($class, $method), $arguments);
             }
         }
         
