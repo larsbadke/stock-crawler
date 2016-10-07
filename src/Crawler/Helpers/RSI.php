@@ -6,45 +6,51 @@ use Illuminate\Support\Collection;
 
 class RSI
 {
-    public static function calculate($quotes, $period = 14, $round = 2)
+    public static function calculate($quotes, $period = 14, $price = 'close', $round = 2)
     {
         if(!$quotes instanceof Collection){
 
             $quotes = collect($quotes);
         }
 
-        $quotes = array_values($quotes->take($period+1)->toArray());
-        
-        if(count($quotes) != $period+1){
-            //TODO ERROR HANDLING
-            return 'error';
+        $quotes = $quotes->take($period+1)->pluck($price);
+
+        if($quotes->count() < $period + 1){
+
+            return 'not enough data';
         }
+        
+        $upsAndDowns = static::calculateUpAndDowns($quotes->toArray(), $period);
 
-        $ups = [];
+        $avgSU = collect($upsAndDowns['ups'])->avg();
 
-        $downs = [];
+        $avgSD = collect($upsAndDowns['downs'])->avg();
 
+        return round(100 *($avgSU)/($avgSU+$avgSD), $round);
+    }
+
+
+    public static function calculateUpAndDowns($quotes, $period)
+    {
+        $ups = $downs = [];
+        
         foreach ($quotes as $index => $quote)
         {
-            if($index == $period){
+            if($index == $period){break;}
 
-                break;
-            }
-
-            if($quote->close >= $quotes[$index+1]->close)
+            if($quote >= $quotes[$index+1])
             {
-                $ups[]= $quote->close - $quotes[$index+1]->close;
+                $ups[]= $quote - $quotes[$index+1];
                 $downs[]=0;
             } else{
                 $ups[]= 0;
-                $downs[]= $quotes[$index+1]->close - $quote->close;
+                $downs[]= $quotes[$index+1] - $quote;
             }
         }
-
-        $avgSU = collect($ups)->reverse()->take($period)->avg();
-
-        $avgSD = collect($downs)->reverse()->take($period)->avg();
-
-        return round(100 *($avgSU)/($avgSU+$avgSD), $round);
+        
+        return array(
+            'ups' => $ups,
+            'downs' => $downs,
+        );
     }
 }

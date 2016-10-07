@@ -27,7 +27,7 @@ class Crawler
         $this->to((new DateTime('now'))->format('d.m.Y'));
     }
 
-    public function run()
+    protected function run()
     {
         $results = [];
 
@@ -47,12 +47,19 @@ class Crawler
                     
                     $compiled = $compiler->parse($condition);
 
-                    echo $index.' - '.$compiled.'<br>';
+                    //todo check complied functions values
+                    $log = 'Date: '.$quote->datetime.' ';
+                    $log .= 'Stock: '.$stock->name().' ';
+                    $log .= 'Condition: '.$condition.' ';
+                    $log .= 'Compiled: '.$compiled.' ';
 
                     if($compiler->isTrue($compiled)){
 
+                        $log .= ' - True';
                         $counter++;
                     }
+
+                    \Illuminate\Support\Facades\Log::info('Check - '.$log);
                 }
                 
                 if($counter == $this->conditions->count()){

@@ -6,13 +6,18 @@ use Illuminate\Support\Collection;
 
 class SMA
 {
-    public static function calculate($quotes, $period = 20, $round = 2)
+    public static function calculate($quotes, $period = 20, $price = 'close', $round = 2)
     {
         if(!$quotes instanceof Collection){
             
             $quotes = collect($quotes);
         }
+        
+        if($quotes->count() < $period){
+            
+            return 'not enough data';
+        }
 
-        return round($quotes->take($period)->avg('close'), $round);
+        return round($quotes->take($period)->avg($price), $round);
     }
 }
