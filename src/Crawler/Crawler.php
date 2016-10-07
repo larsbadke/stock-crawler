@@ -34,7 +34,7 @@ class Crawler
         foreach ($this->stocks as $stock)
         {
             $stock = new Stock($stock);
-            
+
             $quotes = $stock->quotes($this->from, $this->to, 'asc');
 
             foreach ($quotes as $index => $quote)

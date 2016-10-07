@@ -38,27 +38,27 @@ class SMATest extends \PHPUnit_Framework_TestCase{
     {
         $sma5 = SMA::calculate($this->quotes, 5, 'close', 2);
         
-        $this->assertEquals($sma5, 121);
+        $this->assertEquals(121, $sma5);
     }
 
     public function test_calculation_of_open_quotes()
     {
         $sma5 = SMA::calculate($this->quotes, 5, 'open', 2);
 
-        $this->assertEquals($sma5, 114);
+        $this->assertEquals(114, $sma5);
     }
 
     public function test_calculation_with_lower_period()
     {
         $sma5 = SMA::calculate($this->quotes, 3, 'open', 2);
 
-        $this->assertEquals($sma5, 110);
+        $this->assertEquals(110, $sma5);
     }
     
     public function test_calculation_with_not_enough_data()
     {
         $sma5 = SMA::calculate($this->quotes, 10, 'open', 2);
 
-        $this->assertEquals($sma5, 'not enough data');
+        $this->assertEquals('not enough data', $sma5);
     }
 }
