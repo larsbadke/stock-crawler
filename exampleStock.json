@@ -1,9 +1,11 @@
 /*
 ----- Stock example file ------
 -------------------------------
-adidas 01.01.2016 - 01.06.2016
+name: adidas
+country: germany
+from: 01.01.2016
+to: 01.06.2016
 */
-
 {
   "id": 1,
   "name": "ADIDAS AG NA O.N.",

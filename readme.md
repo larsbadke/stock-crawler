@@ -14,7 +14,7 @@ Stock-Crawler requires PHP >= 5.3.3.
 ## Installation
 
 ```sh
-composer require larsbadke/stock-crawler
+coming soon!
 ```
 
 ## Basic Usage
