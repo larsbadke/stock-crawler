@@ -43,30 +43,11 @@ class Compiler
         return implode(' ', $complied);
     }
 
-    protected function checkErrors($condition)
-    {
-//        var_dump($condition);
-//
-//
-//        var_dump(strpos('error', $condition));
-//
-//        if(strpos('error', $condition)){
-//
-//        }
-
-        return false;
-    }
-
     public function isTrue($complied)
     {
-        $result = false;
-
         $condition = 'return ' . $complied . ';';
 
-        if(!$this->checkErrors($condition)){
-
-            $result = eval($condition);
-        }
+        $result = eval($condition);
 
         return $result;
     }

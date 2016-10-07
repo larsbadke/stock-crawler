@@ -11,7 +11,12 @@ class Stock
 
     public function __construct($stock)
     {
-        $this->stock = $this->toObject($stock);
+        if(!is_object($stock)){
+
+            $stock = $this->toObject($stock);
+        }
+        
+        $this->stock = $stock;
     }
     
     public function name()

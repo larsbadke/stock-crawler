@@ -20,11 +20,22 @@ class Crawler
     {
         $this->conditions = new Conditions($conditions);
         
-        $this->stocks = $stocks;
-
+        $this->stocks = array($stocks);
+        
         $this->from('01.01.1970');
 
         $this->to((new DateTime('now'))->format('d.m.Y'));
+    }
+
+    protected function log($condition, $compiled, $quote, $stock)
+    {
+        //todo check complied functions values
+        $log = 'Date: '.$quote->datetime.' ';
+        $log .= 'Stock: '.$stock->name().' ';
+        $log .= 'Condition: '.$condition.' ';
+        $log .= 'Compiled: '.$compiled.' ';
+
+        return $log;
     }
 
     protected function run()
@@ -36,32 +47,21 @@ class Crawler
             $stock = new Stock($stock);
 
             $quotes = $stock->quotes($this->from, $this->to, 'asc');
-
+         
             foreach ($quotes as $index => $quote)
             {
                 $counter = 0;
-                
+       
                 foreach ($this->conditions->get() as $condition)
                 {
                     $compiler = new Compiler($stock, $quote);
 
-                    dd($quote);
-
                     $compiled = $compiler->parse($condition);
-
-                    //todo check complied functions values
-                    $log = 'Date: '.$quote->datetime.' ';
-                    $log .= 'Stock: '.$stock->name().' ';
-                    $log .= 'Condition: '.$condition.' ';
-                    $log .= 'Compiled: '.$compiled.' ';
 
                     if($compiler->isTrue($compiled)){
 
-                        $log .= ' - True';
                         $counter++;
                     }
-
-                    \Illuminate\Support\Facades\Log::info('Check - '.$log);
                 }
                 
                 if($counter == $this->conditions->count()){
