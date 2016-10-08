@@ -17,6 +17,9 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * should be 2 - see exampleStock file
+     * ------------------------------------
+     * 1. - 24.08.2015
+     * 2. - 25.08.2015
      */
     public function test_count_all_days_with_a_close_price_lower_than_105()
     {
@@ -29,10 +32,21 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $results = $crawl->results();
         
         $this->assertCount(2, $results);
+
+        $this->assertEquals("2015-08-24 00:00:00", $results[0]->datetime);
+
+        $this->assertEquals("2015-08-25 00:00:00", $results[1]->datetime);
     }
     
     /**
      * should be 5 - see exampleStock file
+     * ------------------------------------
+     * 1. - 02.05.2016
+     * 2. - 03.05.2016
+     * 3. - 04.05.2016
+     * 4. - 05.05.2016
+     * 5. - 06.05.2016
+     * 
      */
     public function test_count_all_days_with_a_lower_rsi_than_10()
     {
@@ -45,6 +59,36 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $results = $crawl->results();
         
         $this->assertCount(5, $results);
+        
+        $this->assertEquals("2016-05-02 00:00:00", $results[0]->datetime);
+
+        $this->assertEquals("2016-05-03 00:00:00", $results[1]->datetime);
+
+        $this->assertEquals("2016-05-04 00:00:00", $results[2]->datetime);
+
+        $this->assertEquals("2016-05-05 00:00:00", $results[3]->datetime);
+
+        $this->assertEquals("2016-05-06 00:00:00", $results[4]->datetime);
+    }
+
+    /**
+     * should be 1 - see exampleStock file
+     * ------------------------------------
+     * 1. - 28.04.2016
+     */
+    public function test_count_all_days_with_a_lower_rate_of_change_than_minus_15()
+    {
+        $condition = 'roc(10) <= -15;';
+
+        $crawl = new Crawler($this->stock, $condition);
+
+        $crawl->from('01.01.2016')->to('01.06.2016');
+
+        $results = $crawl->results();
+
+        $this->assertCount(1, $results);
+
+        $this->assertEquals("2016-04-28 00:00:00", $results[0]->datetime);
     }
 
 }
