@@ -16,22 +16,35 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * should be 4 - see exampleStock file
+     * should be 2 - see exampleStock file
      */
-    public function test_crawl_all_quotes_with_a_close_price_smaller_than_85()
+    public function test_count_all_days_with_a_close_price_lower_than_105()
     {
-        $condition = 'price() <= 85;';
+        $condition = 'price() <= 105;';
         
         $crawl = new Crawler($this->stock, $condition);
 
-        $crawl->from('01.01.2016')->to('01.01.2017');
+        $crawl->from('01.01.2015')->to('01.01.2016');
         
         $results = $crawl->results();
         
-        $this->assertCount(4, $results);
-        
-        $this->assertEquals(84.89, $results[0]->close);
+        $this->assertCount(2, $results);
     }
+    
+    /**
+     * should be 5 - see exampleStock file
+     */
+    public function test_count_all_days_with_a_lower_rsi_than_10()
+    {
+        $condition = 'rsi(14) <= 10;';
 
+        $crawl = new Crawler($this->stock, $condition);
+
+        $crawl->from('01.01.2016')->to('01.06.2016');
+
+        $results = $crawl->results();
+        
+        $this->assertCount(5, $results);
+    }
 
 }
