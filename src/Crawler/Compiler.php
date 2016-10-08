@@ -14,7 +14,6 @@ class Compiler
     }
 
     protected $synonyms = [
-
         'bigger or same' => '>=',
         'smaller or same' => '<=',
         'bigger than' => '>',
@@ -29,12 +28,11 @@ class Compiler
 
     protected function synonym($condition)
     {
-
         foreach (array_keys($this->synonyms) as $key => $synonym){
 
             if(is_numeric(strpos($condition, $synonym))){
 
-                $condition =str_replace($synonym, array_values($this->synonyms)[$key], $condition);
+                $condition = str_replace($synonym, array_values($this->synonyms)[$key], $condition);
             }
         }
 
@@ -50,13 +48,13 @@ class Compiler
         $terms = $this->explode($condition);
 
         foreach ($terms as $index => $term) {
+            
             $string = '';
 
             switch ($this->type($term)) {
                 case "function":
                     $function = $this->getFunctionName($term);
                     $attitudes = $this->getFunctionAttitudes($term);
-
                     $string = call_user_func_array([$this->factory, $function], $attitudes);
                     break;
                 case "operator":
