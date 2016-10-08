@@ -91,4 +91,55 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("2016-04-28 00:00:00", $results[0]->datetime);
     }
 
+    /**
+     * should be 2 - see exampleStock file
+     * ------------------------------------
+     * 1. - 24.08.2015
+     * 2. - 25.08.2015
+     */
+    public function test_smaller_than_synonyms()
+    {
+        $conditions = [
+            'price() < 105;',
+            'price() smaller than 105;',
+            'price() smaller 105;',
+        ];
+        
+        foreach ($conditions as $condition){
+            
+            $crawl = new Crawler($this->stock, $condition);
+
+            $crawl->from('01.01.2015')->to('01.01.2016');
+
+            $results = $crawl->results();
+
+            $this->assertCount(2, $results);
+        }
+    }
+
+    /**
+     * should be 2 - see exampleStock file
+     * ------------------------------------
+     * 1. - 24.08.2015
+     * 2. - 25.08.2015
+     */
+    public function test_smaller_or_same_synonyms()
+    {
+        $conditions = [
+            'price() <= 105;',
+            'price() smaller or same 105;',
+        ];
+
+        foreach ($conditions as $condition){
+
+            $crawl = new Crawler($this->stock, $condition);
+
+            $crawl->from('01.01.2015')->to('01.01.2016');
+
+            $results = $crawl->results();
+
+            $this->assertCount(2, $results);
+        }
+    }
+
 }

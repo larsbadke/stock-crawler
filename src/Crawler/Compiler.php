@@ -13,8 +13,38 @@ class Compiler
         $this->factory = Factory::create($stock, $quote);
     }
 
+    protected $synonyms = [
+
+        'bigger or same' => '>=',
+        'smaller or same' => '<=',
+        'bigger than' => '>',
+        'smaller than' => '<',
+        'bigger' => '>',
+        'smaller' => '<',
+        'or' => '||',
+        'is not' => '!=',
+        'is' => '==',
+        'and' => '&&',
+    ];
+
+    protected function synonym($condition)
+    {
+
+        foreach (array_keys($this->synonyms) as $key => $synonym){
+
+            if(is_numeric(strpos($condition, $synonym))){
+
+                $condition =str_replace($synonym, array_values($this->synonyms)[$key], $condition);
+            }
+        }
+
+        return $condition;
+    }
+
     public function parse($condition)
     {
+        $condition = $this->synonym($condition);
+
         $complied = [];
 
         $terms = $this->explode($condition);
@@ -105,7 +135,7 @@ class Compiler
 
     public function isOperator($operator)
     {
-        $operators = ['<=', '=', '>=', 'and', '&&'];
+        $operators = ['<', '>', '<=', '==', '>=', '&&', '||'];
 
         if (in_array($operator, $operators)) {
 

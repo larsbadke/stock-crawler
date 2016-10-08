@@ -4,7 +4,7 @@ namespace StockCrawler;
 
 class Factory
 {
-    protected static $defaultProviders = array('Base', 'Indicator');
+    protected static $defaultProviders = array('Base', 'Indicator', 'Candlestick');
     
     public static function create($stock, $quote)
     {
